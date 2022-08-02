@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import tongji from './api/tongji'
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
         <title>Puxiao.com</title>
         <meta name="description" content="Hello world." />
         <link rel="icon" href="/favicon.ico" />
+        <script >{tongji}</script>
       </Head>
 
       <main className={styles.main}>
@@ -17,9 +19,9 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-        {`I'm a Front End Web Developer: `}
+          {`I'm a Front End Web Developer: `}
           <code className={styles.code}>React,Threejs,Antd,Electron,WebGPU</code>
-          <br/>
+          <br />
           I wrote some tutorials to share with you.
         </p>
 
@@ -48,7 +50,7 @@ export default function Home() {
           >
             <h2>wgsl-tutorial &rarr;</h2>
             <p>
-            https://github.com/puxiao/wgsl-tutorial
+              https://github.com/puxiao/wgsl-tutorial
             </p>
           </a>
         </div>
