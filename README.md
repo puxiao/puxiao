@@ -1,15 +1,19 @@
 <img src="./public/hi.svg" width="880" height="100">
 
-我想寻求一份前端开发 3D Threejs 相关远程工作，目前我人在郑州。
+你好，我叫杨普晓，有 3 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/pulls?q=is%3Apr+author%3Apuxiao+is%3Aclosed)，之前做过：
 
-我有 3 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/pulls?q=is%3Apr+author%3Apuxiao+is%3Aclosed)，做过  3D标本模型交互、点云标注工具等，2D 则熟练使用 Konvajs。
+* 3D点云立方体标注工具
+* 自动驾驶BEV联合标注工具
+* 2D拉框和多边形标注工具 
 
-我还会：React、Nodejs、Electron、Taro、Uniapp...
+目前就职于郑州某公司从事 基于浏览器的 **3D标本解剖教学平台研发**。
 
-我英语口语不行，但借助翻译工具英语阅读和文字沟通没有问题。
+我还会：React、Vue3、Nodejs、Electron、Taro、Uniapp...
 
-期待你的联系：
+若有交流需要，可通过下面方式与我联系：
 
-* 我邮箱：yangpuxiao@gmail.com
+* 邮箱：yangpuxiao@gmail.com
 
-* 我微信：15890145250
+* 微信：15890145250
+
+
