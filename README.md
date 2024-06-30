@@ -1,6 +1,6 @@
 <img src="./public/hi.svg" width="880" height="100">
 
-你好，我叫杨普晓，有 3 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/pulls?q=is%3Apr+author%3Apuxiao+is%3Aclosed)，之前做过：
+你好，我叫杨普晓，有 3 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/commits?author=puxiao)，之前做过：
 
 * 3D点云立方体标注工具
 * 自动驾驶BEV联合标注工具
