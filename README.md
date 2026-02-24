@@ -1,6 +1,6 @@
 <img src="./public/too_open.svg" width="880" height="100">
 
-你好，我叫杨普晓，有 4 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/commits?author=puxiao)，之前做过：
+你好，我叫杨普晓，有 5 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/commits?author=puxiao)，之前做过：
 
 * 3D点云立方体标注工具
 * 自动驾驶BEV联合标注工具
@@ -25,7 +25,7 @@
 
 由于某些原因，**目前在职但有更换工作的意向，若有以下机会请与我联系**：
 
-* 郑州全职前端开发岗位(12K+)
+* 郑州全职前端开发岗位(15K+)
 * 其他城市远程全职前端开发岗位
 * 单独前端项目外包
 
