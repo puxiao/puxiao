@@ -15,6 +15,8 @@ export default function Home() {
           I wrote some tutorials to share with you.
         </p>
 
+        <img width="343" height="200" src="https://raw.githubusercontent.com/puxiao/notes/master/imgs/wechat.jpg" />
+
         <div className={styles.grid}>
           <a href="https://github.com/puxiao/react-hook-tutorial" className={styles.card}>
             <h2>react-hook-tutorial &rarr;</h2>
