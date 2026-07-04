@@ -16,6 +16,7 @@ export default function Home() {
         </p>
 
         <img width="343" height="200" src="https://raw.githubusercontent.com/puxiao/notes/master/imgs/wechat.jpg" />
+        <img width="178" height="185" src="/paypal-sponsorship-qrcode.png" />
 
         <div className={styles.grid}>
           <a href="https://github.com/puxiao/react-hook-tutorial" className={styles.card}>
