@@ -1,4 +1,4 @@
-<img src="./public/too_open.svg" width="880" height="100">
+<img src="./assets/too_open.svg" width="880" height="100">
 
 你好，我叫杨普晓，有 5 年 Threejs 开发经验，曾向 Three.js 贡献多个 [PR](https://github.com/mrdoob/three.js/commits?author=puxiao)，之前做过：
 
