@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Puxiao</title>
+<meta name="description" content="Yang Puxiao — front-end developer working on Three.js, WebGPU, Rust and WebAssembly. Nice to meet you." />
+<link rel="icon" href="assets/avatar.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --col: 56rem;
+    --bg: #fafaf9;
+    --text: #3f3f6d;
+    --text-dim: #86869c;
+    --ink: #121314;
+    --hl: rgba(47, 111, 237, .2);
+    --hl-hover: rgba(47, 111, 237, .46);
+    --rule: rgba(63, 63, 109, .14);
+    --ctrl: rgba(63, 63, 109, .08);
+    --ctrl-on: rgba(63, 63, 109, .13);
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --bg: #16161b;
+    --text: #c9c9dc;
+    --text-dim: #7c7c95;
+    --ink: #f2f2f5;
+    --hl: rgba(111, 157, 255, .40);
+    --hl-hover: rgba(111, 157, 255, .52);
+    --rule: rgba(201, 201, 220, .14);
+    --ctrl: rgba(201, 201, 220, .08);
+    --ctrl-on: rgba(201, 201, 220, .14);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 7vh 22px;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-variation-settings: "wdth" 100;
+    transition: background-color .4s ease, color .4s ease;
+  }
+  .top, .col, footer {
+    max-width: var(--col);
+    margin-left: auto; margin-right: auto;
+  }
+
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; margin-bottom: 5em;
+  }
+  .mark {
+    display: block;
+    flex: none;
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--rule);
+  }
+  .ctrls { display: flex; gap: 16px; align-items: center; }
+  .seg { display: flex; gap: 3px; }
+  .seg button {
+    font: inherit; font-size: .82em; line-height: 1;
+    padding: 5px 9px; border: 0; border-radius: 5px; cursor: pointer;
+    background: transparent; color: var(--text-dim);
+    transition: background .2s ease, color .2s ease;
+  }
+  .seg button:hover { color: var(--text); }
+  .seg button[aria-pressed="true"] {
+    background: var(--ctrl-on); color: var(--text); font-weight: 600;
+  }
+
+  h1 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-size: clamp(2.6em, 7vw, 4.5em);
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.08;
+    letter-spacing: -.01em;
+    margin: 0 0 .06em;
+    color: var(--ink);
+  }
+  .cn-name {
+    font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+    font-size: 1.05em; color: var(--text-dim);
+    margin: 0 0 .5em; letter-spacing: .12em;
+  }
+
+  p {
+    font-size: 1.2em;
+    font-weight: 300;
+    line-height: 1.42;
+    margin: 2em 0;
+  }
+  p:first-of-type { margin-top: 2.6em; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: italic; }
+
+  .motto {
+    font-size: 1.2em;
+    font-weight: 300;
+    line-height: 1.42;
+    color: var(--ink);
+    margin: 1.2rem 0 0;
+    letter-spacing: .01em;
+  }
+
+  .qr {
+    display: block;
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius: 10px;
+  }
+
+  a {
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--ink);
+    position: relative;
+  }
+  a:after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 66%;
+    left: -.1em;
+    right: -.1em;
+    bottom: 0;
+    background-color: var(--hl);
+    transition: top 200ms cubic-bezier(0, .8, .13, 1), background-color .3s ease;
+  }
+  a:hover:after { top: 0%; background-color: var(--hl-hover); }
+
+  h2 {
+    font-size: .78em;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 3.4em 0 0;
+  }
+  h2 + p { margin-top: 1em; }
+
+  ul.repos { list-style: none; padding: 0; margin: 1.2em 0 0; max-width: var(--col); }
+  ul.repos li {
+    padding: .55em 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 1.06em; font-weight: 300;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1.2em;
+  }
+  ul.repos li:last-child { border-bottom: 0; }
+  .stars {
+    font-size: .82em; color: var(--text-dim);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+
+  ul.prs {
+    list-style: none; padding: 0; margin: 1.4em 0 0;
+    max-width: var(--col);
+  }
+  ul.prs > li.pr-group {
+    position: relative;
+    border-bottom: 1px solid var(--rule);
+  }
+  ul.prs > li.pr-group:last-child { border-bottom: 0; }
+
+  ul.prs li.pr-row {
+    display: grid;
+    grid-template-columns: minmax(0, 16em) minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 1.4em;
+    padding: .52em 0;
+    font-size: 1em; font-weight: 300; line-height: 1.45;
+  }
+
+  ul.prs .pr-repo {
+    display: flex; align-items: baseline; gap: .5em;
+    min-width: 0;
+    font-size: .86em; color: var(--text-dim);
+  }
+  ul.prs .pr-repo .pr-repo-name {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  ul.prs .pr-t {
+    min-width: 0; overflow-wrap: anywhere;
+  }
+  ul.prs .pr-t a { white-space: normal; }
+  ul.prs .pr-d {
+    font-size: .8em; color: var(--text-dim);
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+
+  ul.prs .pr-toggle {
+    flex: none;
+    display: inline-flex; align-items: center; gap: .28em;
+    padding: .1em .42em .12em;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-dim);
+    font: inherit; font-size: .72em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: color .18s ease, border-color .18s ease, background-color .18s ease;
+  }
+  ul.prs .pr-toggle:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  ul.prs .pr-toggle .pr-count { font-size: .95em; }
+  ul.prs .pr-toggle svg {
+    transition: transform .22s cubic-bezier(.3,.8,.35,1);
+  }
+  ul.prs li.pr-group.open .pr-toggle svg { transform: rotate(180deg); }
+
+  ul.prs .pr-subs {
+    list-style: none; margin: 0; padding: 0;
+    display: none;
+  }
+  ul.prs li.pr-group.open .pr-subs { display: block; }
+  ul.prs .pr-subs > li.pr-sub {
+    display: grid;
+    grid-template-columns: minmax(0, 16em) minmax(0, 1fr) auto;
+    align-items: baseline;
+    column-gap: 1.4em;
+    padding: .34em 0 .34em 0;
+    font-size: .92em; font-weight: 300; line-height: 1.4;
+    border-top: 1px dashed var(--rule);
+    color: var(--text-dim);
+  }
+  ul.prs .pr-subs > li.pr-sub:first-child { border-top: 0; }
+  ul.prs .pr-subs .pr-repo { padding-left: 1.1em; }
+  ul.prs .pr-subs .pr-t a { color: var(--text-dim); }
+  ul.prs .pr-subs .pr-t a:hover { color: var(--ink); }
+
+  .counts {
+    display: flex; gap: 2.6em; margin: 1.6em 0 0; flex-wrap: wrap;
+  }
+  .count-num {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-style: italic;
+    font-size: 2.6em; line-height: 1; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .count-label { font-size: .8em; color: var(--text-dim); margin-top: .5em; letter-spacing: .04em; }
+
+  footer {
+    margin-top: 3.6em; padding-top: 1.4em;
+    border-top: 1px solid var(--rule);
+    font-size: .88em; color: var(--ink);
+    display: flex; justify-content: space-between; gap: 1.4em; flex-wrap: wrap;
+    width: 100%;
+    letter-spacing: .01em;
+  }
+  footer a { color: inherit; }
+  footer a:hover { color: var(--ink); }
+
+  .reveal { opacity: 0; transform: translateY(10px); }
+  .reveal.in {
+    opacity: 1; transform: none;
+    transition: opacity .8s cubic-bezier(.22,.68,.35,1), transform .8s cubic-bezier(.22,.68,.35,1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.in { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+  @media (max-width: 1280px) {
+    p { font-size: 1.1em; }
+  }
+  @media (max-width: 560px) {
+    body { padding: 5vh 22px; }
+    .top { margin-bottom: 3.2em; }
+    p { margin: 1.6em 0; font-size: 1.06em; }
+    footer { margin-top: 3em; }
+    .counts { gap: 1.8em; }
+    .count-num { font-size: 2.1em; }
+    ul.prs li.pr-row {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "repo date"
+        "title title";
+      row-gap: .1em;
+      font-size: .95em;
+    }
+    ul.prs li.pr-row .pr-repo { grid-area: repo; }
+    ul.prs li.pr-row .pr-d { grid-area: date; }
+    ul.prs li.pr-row .pr-t { grid-area: title; }
+    ul.prs .pr-subs > li.pr-sub {
+      grid-template-columns: 1fr auto;
+      grid-template-areas:
+        "repo date"
+        "title title";
+      row-gap: .1em;
+      font-size: .9em;
+    }
+    ul.prs .pr-subs > li.pr-sub .pr-repo { grid-area: repo; padding-left: 1.1em; }
+    ul.prs .pr-subs > li.pr-sub .pr-d { grid-area: date; }
+    ul.prs .pr-subs > li.pr-sub .pr-t { grid-area: title; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <img class="mark" src="assets/avatar.png" alt="Yang Puxiao" width="68" height="68">
+    <div class="ctrls">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+      </div>
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-set="light" aria-pressed="true">☀</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false">☾</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+
+    <h1 class="reveal" data-i18n="name"></h1>
+    <p class="cn-name reveal" data-i18n="nameCn"></p>
+
+    <p class="reveal" data-i18n="p1"></p>
+    <p class="reveal" data-i18n="p2"></p>
+    <p class="reveal" data-i18n="p3"></p>
+
+    <h2 class="reveal" data-i18n="hTutorials"></h2>
+    <ul class="repos reveal">
+      <li>
+        <a href="https://github.com/puxiao/threejs-tutorial" target="_blank" rel="noopener">threejs-tutorial</a>
+        <span class="stars">★ 1.3k</span>
+      </li>
+      <li>
+        <a href="https://github.com/puxiao/react-hook-tutorial" target="_blank" rel="noopener">react-hook-tutorial</a>
+        <span class="stars">★ 837</span>
+      </li>
+      <li>
+        <a href="https://github.com/puxiao/webgpu-tutorial" target="_blank" rel="noopener">webgpu-tutorial</a>
+        <span class="stars">★ 252</span>
+      </li>
+      <li>
+        <a href="https://github.com/puxiao/notes" target="_blank" rel="noopener">notes</a>
+        <span class="stars">★ 357</span>
+      </li>
+    </ul>
+
+    <h2 class="reveal" data-i18n="hContact"></h2>
+    <p class="reveal" data-i18n="contactP"></p>
+    <img class="qr reveal" src="assets/wechat.jpg" alt="微信二维码：加我微信好友 / 随意金额打赏" width="686" height="400">
+
+    <h2 class="reveal" data-i18n="hContrib"></h2>
+    <p class="reveal" data-i18n="contribP"></p>
+
+    <div class="counts reveal">
+      <div>
+        <div class="count-num">92</div>
+        <div class="count-label" data-i18n="countPR"></div>
+      </div>
+      <div>
+        <div class="count-num">34</div>
+        <div class="count-label" data-i18n="countRepos"></div>
+      </div>
+      <div>
+        <div class="count-num">2020–2026</div>
+        <div class="count-label" data-i18n="countSince"></div>
+      </div>
+    </div>
+
+    <p class="reveal" data-i18n="prNote"></p>
+    <ul class="prs reveal" id="prList"></ul>
+
+    <h2 class="reveal" data-i18n="hMotto"></h2>
+    <p class="motto reveal" data-i18n="motto"></p>
+
+  </div>
+
+  <footer>
+    <span>&copy; <span id="year"></span> <a href="https://puxiao.com" target="_blank" rel="noopener">puxiao.com</a></span>
+  </footer>
+
+<script>
+const I18N = {
+  en: {
+    name: 'Yang Puxiao',
+    nameCn: '杨普晓',
+    p1: 'I am a front-end developer working on <strong>Three.js</strong>, <strong>WebGPU</strong>, <strong>Rust</strong> and <strong>WebAssembly</strong>. I have five years of experience with Three.js, and I have written a number of tutorials to share what I learned along the way.',
+    p2: 'Currently based in Zhengzhou, China, I work on browser-based <strong>3D specimen interaction</strong>, <strong>virtual dissection simulation</strong> and <strong>medical teaching platforms</strong>. Before that, I built annotation tools — 3D point-cloud cube labelling, autonomous-driving BEV joint labelling, and 2D box and polygon labelling.',
+    p3: 'I have contributed <strong>92 pull requests</strong> to open source projects — to the core repositories of three.js, PixiJS, Cesium, Ant Design and many others. Before moving into engineering, I spent five years in web design.',
+    hTutorials: 'Tutorials',
+    hContrib: 'Open source',
+    contribP: 'Merged pull requests across <strong>34 open source repositories</strong> — from the core 3D libraries to design systems, tooling and documentation.',
+    countPR: 'pull requests',
+    countRepos: 'repositories',
+    countSince: 'contributing since',
+    prNote: 'Every repository I have contributed to, with its most recent merged pull request, ordered by that date:',
+    hContact: 'Contact',
+    contactP: 'You can reach me at <a href="mailto:yangpuxiao@gmail.com">yangpuxiao@gmail.com</a>, or find me on <a href="https://github.com/puxiao" target="_blank" rel="noopener">GitHub</a>.',
+    hMotto: 'Motto',
+    motto: 'I love life, I love coding.'
+  },
+  zh: {
+    name: '杨普晓',
+    nameCn: 'Yang Puxiao',
+    p1: '我是一名前端开发者，关注的领域是 <strong>Three.js</strong>、<strong>WebGPU</strong>、<strong>Rust</strong> 与 <strong>WebAssembly</strong>。我有五年 Three.js 开发经验，也写了一些教程来分享这一路上的所学。',
+    p2: '我生活在郑州，从事浏览器端的 <strong>3D 标本模型交互</strong>、<strong>虚拟仿真解剖实验</strong>与 <strong>医学教学平台研发</strong>。在此之前，我做过各类标注工具——3D 点云立方体标注、自动驾驶 BEV 联合标注、2D 拉框与多边形标注。',
+    p3: '我曾向开源项目提交过 <strong>92 个 PR</strong>——涉及 three.js、PixiJS、Cesium、Ant Design 等项目的官方仓库。在从事编程之前，我有过五年的网页设计经历。',
+    hTutorials: '教程',
+    hContrib: '开源贡献',
+    contribP: '已合并的 PR 遍及 <strong>34 个开源仓库</strong>——从核心 3D 库，到设计系统、构建工具与文档项目。',
+    countPR: '个 PR 提交',
+    countRepos: '个开源仓库',
+    countSince: '持续贡献自',
+    prNote: '以下是我贡献过的每一个仓库，各列出最近一次合并的 PR，并按日期倒序排列：',
+    hContact: '联系',
+    contactP: '可以通过 <a href="mailto:yangpuxiao@gmail.com">yangpuxiao@gmail.com</a> 联系我，或者到 <a href="https://github.com/puxiao" target="_blank" rel="noopener">GitHub</a> 找我。',
+    hMotto: '座右铭',
+    motto: '我爱生活，我爱编程。'
+  }
+};
+
+let lang = 'en';
+let theme = 'light';
+
+function applyLang(l) {
+  lang = I18N[l] ? l : 'en';
+  const dict = I18N[lang];
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = dict[el.getAttribute('data-i18n')];
+    if (typeof v === 'string') el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-lang]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-lang') === lang));
+  });
+}
+
+function applyTheme(t) {
+  theme = (t === 'dark') ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('[data-theme-set]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.getAttribute('data-theme-set') === theme));
+  });
+}
+
+document.querySelectorAll('[data-lang]').forEach(b => {
+  b.addEventListener('click', () => applyLang(b.getAttribute('data-lang')));
+});
+document.querySelectorAll('[data-theme-set]').forEach(b => {
+  b.addEventListener('click', () => applyTheme(b.getAttribute('data-theme-set')));
+});
+
+applyLang(lang);
+applyTheme(theme);
+
+(function () {
+  const y = document.getElementById('year');
+  if (y) y.textContent = String(new Date().getFullYear());
+})();
+
+const REPOS = [
+  { r: "gkjohnson/three-mesh-bvh", prs: [
+      { n: 924, d: "2026-09-25", t: "BVHHelper: Fix rendering with three r186" }
+  ] },
+  { r: "THU-MAIC/OpenMAIC", prs: [
+      { n: 1615, d: "2026-09-20", t: "fix(tests): make media tests pass on Windows path separators" },
+      { n: 1426, d: "2026-09-11", t: "fix(materials): sanitize owner id in byte-store key so uploads work on Windows" },
+      { n: 1424, d: "2026-09-11", t: "fix(importer): stop PPTX import from hanging in non-browser environments" },
+      { n: 1372, d: "2026-09-04", t: "fix(importer): pnpm install fails on Windows" }
+  ] },
+  { r: "three-types/three-ts-types", prs: [
+      { n: 2127, d: "2026-04-21", t: "GLTFLoader: Update setDRACOLoader to accept null value" },
+      { n: 1013, d: "2024-06-17", t: "LineMaterialParameters: extends ShaderMaterialParameters not MaterialParameters" },
+      { n: 627, d: "2023-10-22", t: "Replace Color with ColorRepresentation" },
+      { n: 569, d: "2023-07-31", t: "SelectionHelper: Add enabled property." },
+      { n: 488, d: "2023-06-30", t: "Fix Matrix3/4 makeTranslation types" },
+      { n: 109, d: "2021-09-18", t: "Update TransformControls.d.ts" },
+      { n: 110, d: "2021-09-13", t: "Update Water.d.ts" },
+      { n: 82, d: "2021-05-27", t: "Update constants.d.ts" },
+      { n: 69, d: "2021-04-12", t: "OrbitControls/TrackballControls: Change the attribute type of keys from number to string" }
+  ] },
+  { r: "chansee97/nova-admin", prs: [
+      { n: 54, d: "2025-10-30", t: "fix: add the autocomplete attribute to the username/password input." }
+  ] },
+  { r: "mrdoob/three.js", prs: [
+      { n: 31960, d: "2025-09-27", t: "[Doc] Improve translation accuracy and consistency" },
+      { n: 30205, d: "2024-12-26", t: "[Doc/zh]: Improve Chinese translation." },
+      { n: 29920, d: "2024-11-19", t: "Docs:Improve documentation about WebGLRenderer.extensions" },
+      { n: 29746, d: "2024-10-25", t: "GLTFLoader: Add KTX2 mime type support in getImageURIMimeType" },
+      { n: 29643, d: "2024-10-14", t: "Docs: Improve Chinese translation." },
+      { n: 29406, d: "2024-09-14", t: "Docs: Improve Chinese translation." },
+      { n: 29315, d: "2024-09-04", t: "JoltPhysics/RapierPhysics: Fix some warning messages" },
+      { n: 29314, d: "2024-09-04", t: "Docs: Improve Chinese translation." },
+      { n: 29123, d: "2024-08-13", t: "[Doc/zh] Improve Chinese translation related to FirstPersonControls." },
+      { n: 29107, d: "2024-08-12", t: "[Doc/zh]: Improve Chinese translation related to `Controls`." },
+      { n: 28688, d: "2024-06-21", t: "ViewHelper: Make label text and style configurable." },
+      { n: 27813, d: "2024-02-24", t: "[Doc/zh] Add some missing Chinese documents" },
+      { n: 27657, d: "2024-01-31", t: "Docs: Fix source links in Chinese translations." },
+      { n: 27443, d: "2023-12-30", t: "[Doc] Add some missing Chinese documents" },
+      { n: 27298, d: "2023-12-04", t: "[Doc/zh] Update Quaternion.html" },
+      { n: 27001, d: "2023-10-18", t: "[Doc/zh]: update Mesh.html" },
+      { n: 26952, d: "2023-10-12", t: "[Doc/zh] Update AxesHelper.html" },
+      { n: 26483, d: "2023-07-24", t: "SelectionHelper: Add enabled property." },
+      { n: 25374, d: "2023-01-31", t: "fixed: Consider marking event handler as 'passive' to make the page more responsive" },
+      { n: 24960, d: "2022-11-16", t: "PCDLoader: Remove unnecessary escape character." },
+      { n: 24765, d: "2022-10-10", t: "Editor: Remove `UIListbox` namespace from `ListboxItem`." },
+      { n: 23469, d: "2022-02-14", t: "Doc: Update RectAreaLight.html" },
+      { n: 22329, d: "2021-08-15", t: "[Doc/en]: Delete a useless word in Plane.html" },
+      { n: 22328, d: "2021-08-15", t: "[Doc/zh]: Added some Chinese translations" },
+      { n: 22317, d: "2021-08-13", t: "[Doc/en]: fix some description errors in box3.html and sphere.html" },
+      { n: 22310, d: "2021-08-11", t: "[Doc/en]: Fix `Cameras have two additional Matrix4s`" },
+      { n: 22291, d: "2021-08-11", t: "[Doc/zh]: Added some Chinese translations" },
+      { n: 22184, d: "2021-07-26", t: "[Docs/zh]: Update Matrix3.html and Matrix4.html" },
+      { n: 22065, d: "2021-07-10", t: "Update webgl_panorama_cube.html" },
+      { n: 22084, d: "2021-07-04", t: "DragControls: added onPointerDown parameters" },
+      { n: 21873, d: "2021-05-22", t: "[Doc/zh]: Update Spherical.html" },
+      { n: 21729, d: "2021-04-27", t: "[Doc/zh]: Update PCDLoader.html" },
+      { n: 21687, d: "2021-04-21", t: "Color: added support for add color values using uppercase" },
+      { n: 21647, d: "2021-04-14", t: "[examples/index.html]: remove onmousewheel" },
+      { n: 21642, d: "2021-04-13", t: "DragControls/OrbitControls/TrackballControls: wheel/touchmove/touchstart add { passive: false }" },
+      { n: 21409, d: "2021-03-30", t: "OrbitControls/TrackballControls: Replace event.keyCode with event.code." },
+      { n: 20993, d: "2021-01-04", t: "Docs: Update zh/materials/Material.html" },
+      { n: 20976, d: "2020-12-31", t: "Docs: Update WebGLRenderTarget documentation" }
+  ] },
+  { r: "web-infra-dev/rsbuild", prs: [
+      { n: 5298, d: "2025-05-23", t: "docs: update `output.copy` examples" }
+  ] },
+  { r: "dcloudio/unidocs-zh", prs: [
+      { n: 34, d: "2025-05-07", t: "Update web-view.md" }
+  ] },
+  { r: "lqzhgood/wechat-need-web", prs: [
+      { n: 40, d: "2024-12-16", t: "Fix the import path in index.ts" }
+  ] },
+  { r: "zoran-php/fernet-ts", prs: [
+      { n: 3, d: "2024-10-17", t: "Improve README.md" }
+  ] },
+  { r: "yomotsu/camera-controls", prs: [
+      { n: 544, d: "2024-10-16", t: "chore: Improve readme.md" }
+  ] },
+  { r: "tusen-ai/naive-ui", prs: [
+      { n: 6015, d: "2024-07-21", t: "docs(customize-theme): get theme vars" }
+  ] },
+  { r: "microsoft/vscode-docs", prs: [
+      { n: 7255, d: "2024-05-06", t: "[Doc] Improve accessibility.md" }
+  ] },
+  { r: "immerjs/immer", prs: [
+      { n: 1067, d: "2024-04-27", t: "[Doc]: Update /zh-CN/" }
+  ] },
+  { r: "wasm-bindgen/wasm-pack", prs: [
+      { n: 1344, d: "2024-03-16", t: "Docs: Add a description of `build --target deno`" }
+  ] },
+  { r: "react-component/input-number", prs: [
+      { n: 618, d: "2024-01-20", t: "addEventListener('wheel', onWheel) add { passive: false }" }
+  ] },
+  { r: "ruidoc/jueblog-combat", prs: [
+      { n: 1, d: "2024-01-12", t: "Update index.html lang=\"en\" to \"zh\"" }
+  ] },
+  { r: "mdn/translated-content", prs: [
+      { n: 17460, d: "2023-12-14", t: "[zh-cn]: Update webgpu_api" },
+      { n: 17267, d: "2023-12-06", t: "[zh-cn]: update the examples in `toBlob()`" },
+      { n: 15944, d: "2023-09-19", t: "[zh-cn]: Update CanvasRenderingContext2D/createLinearGradient" },
+      { n: 997, d: "2021-05-27", t: "[zh-cn]: Update web/api/globaleventhandlers/oncontextmenu/index.html" },
+      { n: 817, d: "2021-05-11", t: "Update zh-cn/web/api/resizeobserver/observe/index.html" }
+  ] },
+  { r: "pmndrs/valtio", prs: [
+      { n: 829, d: "2023-11-30", t: "doc: fix import in subscribe.md" }
+  ] },
+  { r: "antvis/G6", prs: [
+      { n: 5022, d: "2023-10-07", t: "[Doc]: Update getting-started.zh.md" }
+  ] },
+  { r: "google/tour-of-wgsl", prs: [
+      { n: 40, d: "2023-04-05", t: "Fix: font file not found" }
+  ] },
+  { r: "ant-design/ant-design", prs: [
+      { n: 40233, d: "2023-01-14", t: "docs: Update Image index.zh-CN.md" }
+  ] },
+  { r: "Orillusion/orillusion-web", prs: [
+      { n: 104, d: "2022-07-13", t: "fix: \u4fee\u6539\u4e00\u4e9b\u7ffb\u8bd1" },
+      { n: 74, d: "2022-05-24", t: "fix: \u7eb9\u7406\u7ed3\u6784 \u5e94\u6539\u4e3a \u6587\u672c\u7ed3\u6784" },
+      { n: 43, d: "2022-04-07", t: "17\u7ae0 bundles \u6807\u9898\u4fee\u6539\u4e3a \u6346\u7ed1" },
+      { n: 21, d: "2022-02-24", t: "Improve render pipeline" },
+      { n: 20, d: "2022-02-23", t: "Doc: GPUDevice.createPipelineLayout()" },
+      { n: 17, d: "2022-02-18", t: "Fix: magFilter, addressModeV" }
+  ] },
+  { r: "ant-design/ant-design-pro", prs: [
+      { n: 9786, d: "2022-05-10", t: "Update to antd 4.20.0 for `Menu support items`" }
+  ] },
+  { r: "vuejs/vue-cli", prs: [
+      { n: 6753, d: "2021-11-15", t: "Add `getters:{}` to cli-plugin-vuex template" }
+  ] },
+  { r: "web-infra-dev/modern.js", prs: [
+      { n: 183, d: "2021-10-27", t: "fix(generator): generator template" }
+  ] },
+  { r: "vuejs/v2.cn.vuejs.org", prs: [
+      { n: 1179, d: "2021-10-24", t: "Fix some more fluent and rigorous translations" }
+  ] },
+  { r: "meschg/vue-stack-cesium", prs: [
+      { n: 7, d: "2021-09-21", t: "fix the zip.js error in cesium 1.85" }
+  ] },
+  { r: "CesiumGS/cesium", prs: [
+      { n: 9745, d: "2021-08-25", t: "Scene: change options to required" }
+  ] },
+  { r: "pixijs/pixijs", prs: [
+      { n: 7452, d: "2021-05-20", t: "InteractionManager: replace useCapture with options" }
+  ] },
+  { r: "eva-engine/eva-engine.github.io", prs: [
+      { n: 8, d: "2021-04-26", t: "[doc]: Update customComponent.md" }
+  ] },
+  { r: "gfxfundamentals/threejsfundamentals", prs: [
+      { n: 205, d: "2021-04-18", t: "Update threejs-backgrounds.md" },
+      { n: 180, d: "2021-01-21", t: "Docs: Change 'req' to 'res' for fetch handler" }
+  ] },
+  { r: "apache/echarts-doc", prs: [
+      { n: 138, d: "2020-11-16", t: "Modify the wrong URL of theme builder." }
+  ] },
+  { r: "venaissance/echarts-demo-js-vue-react", prs: [
+      { n: 1, d: "2020-11-13", t: "React + TypeScript + Echarts \u4f7f\u7528\u793a\u4f8b" }
+  ] },
+  { r: "progit/progit2-zh", prs: [
+      { n: 416, d: "2020-08-02", t: "\u672c\u6587\u4e2d .gitiignore \u62fc\u5199\u9519\u8bef" }
+  ] },
+];
+function prLink(repo, n) {
+  return 'https://github.com/' + repo + '/pull/' + n;
+}
+
+function makeRow(repo, pr, isSub) {
+  const li = document.createElement('li');
+  li.className = isSub ? 'pr-sub' : 'pr-row';
+
+  const rr = document.createElement('span');
+  rr.className = 'pr-repo';
+  if (!isSub) {
+    const name = document.createElement('span');
+    name.className = 'pr-repo-name';
+    name.textContent = repo;
+    rr.appendChild(name);
+  } else {
+    const a = document.createElement('a');
+    a.href = prLink(repo, pr.n);
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = '#' + pr.n;
+    rr.appendChild(a);
+  }
+
+  const t = document.createElement('span');
+  t.className = 'pr-t';
+  const a = document.createElement('a');
+  a.href = prLink(repo, pr.n);
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = pr.t;
+  t.appendChild(a);
+
+  const d = document.createElement('span');
+  d.className = 'pr-d';
+  d.textContent = pr.d;
+
+  li.appendChild(rr);
+  li.appendChild(t);
+  li.appendChild(d);
+  return li;
+}
+
+function renderPRs() {
+  const ul = document.getElementById('prList');
+  if (!ul) return;
+  ul.innerHTML = '';
+
+  REPOS.forEach(group => {
+    const li = document.createElement('li');
+    li.className = 'pr-group';
+    if (group.prs.length > 1) li.classList.add('has-more');
+
+    const row = makeRow(group.r, group.prs[0], false);
+    li.appendChild(row);
+
+    if (group.prs.length > 1) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pr-toggle';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Show all ' + group.prs.length + ' pull requests');
+      btn.title = 'Show all ' + group.prs.length + ' pull requests';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">' +
+        '<path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+        'stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '<span class="pr-count">' + group.prs.length + '</span>';
+
+      const subs = document.createElement('ul');
+      subs.className = 'pr-subs';
+      group.prs.slice(1).forEach(pr => subs.appendChild(makeRow(group.r, pr, true)));
+
+      btn.addEventListener('click', () => {
+        const open = li.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      row.querySelector('.pr-repo').appendChild(btn);
+      li.appendChild(subs);
+    }
+
+    ul.appendChild(li);
+  });
+}
+renderPRs();
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = Math.min(i * 55, 300) + 'ms';
+  io.observe(el);
+});
+</script>
+</body>
+</html>
